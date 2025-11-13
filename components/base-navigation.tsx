@@ -1,10 +1,10 @@
 import React from "react";
 import { Button } from "./ui/button";
-import { LogIn } from "lucide-react";
+import { BrickWallShield, LogIn } from "lucide-react";
 
 const BaseNavigation = () => {
-  return <div className="w-full h-10 flex items-center justify-between fixed left-1/2 px-[5vmin] pr-[10vmin] -translate-x-1/2 ">
-    <h1 className="font-extrabold text-[#fd6500] " >PROJEX</h1>
+  return <div className="w-full h-10 flex items-center justify-between fixed left-1/2 px-[5vmin] pr-[10vmin] -translate-x-1/2 bg-[#ffffff86] backdrop-blur-[5px]  z-100 ">
+    <h1 className="font-extrabold text-[#fd6500] flex items-center gap-1" ><BrickWallShield size={18}  />PROJEX</h1>
     <ul className="flex gap-5 font-semibold" >
         <li>Hello</li>
         <li>Project</li>
