@@ -1,6 +1,7 @@
 import React from "react";
 import { Button } from "./ui/button";
 import { BrickWallShield, LogIn } from "lucide-react";
+import Link from "next/link";
 
 const BaseNavigation = () => {
   return <div className="w-full h-10 flex items-center justify-between fixed left-1/2 px-[5vmin] pr-[10vmin] -translate-x-1/2 bg-[#ffffff86] backdrop-blur-[5px]  z-100 ">
@@ -12,7 +13,9 @@ const BaseNavigation = () => {
         <li>Project</li>
     </ul>
     <div className="flex items-center gap-6" >
-    <button className="flex items-center gap-1 font-semibold cursor-pointer hover:text-[#fd6500] " ><LogIn size={16} />Login</button>
+    <button className="flex items-center gap-1 font-semibold cursor-pointer hover:text-[#fd6500] " ><LogIn size={16} />
+        <Link href={"/sign-in"} >Login</Link>
+    </button>
     <Button className="shadow-xl h-fit py-1.5 cursor-pointer" >Signup</Button>
     </div>
     </div>;
