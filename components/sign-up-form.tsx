@@ -26,14 +26,6 @@ const SignUpForm = () => {
                         id="name"
                         className="border-black border rounded py-1 px-2 "
                     />
-                    <label htmlFor="username" className="font-semibold">
-                        Username
-                    </label>
-                    <input
-                        type="text"
-                        id="username"
-                        className="border-black border rounded py-1 px-2 "
-                    />
                     <label htmlFor="email" className="font-semibold">
                         Email
                     </label>

@@ -1,3 +1,4 @@
+import bcrypt from "bcryptjs";
 import mongoose, { Schema, Document, Model } from "mongoose";
 
 // Task Schema
@@ -12,7 +13,6 @@ interface Task {
 
 export interface UserDocument extends Document {
   name: string;
-  username: string,
   email: string;
   password: string,
   image?: string;
@@ -47,14 +47,13 @@ const TaskSchema = new Schema<Task>(
 const UserSchema = new Schema<UserDocument>(
   {
     name: { type: String },
-    username: { type: String, required: true, unique: true },
     email: { type: String, required: true, unique: true },
     password: {type: String, required: true},
     image: { type: String },
 
     // NextAuth provider data
-    authProvider: { type: String, required: true }, // e.g. "google", "github"
-    authProviderId: { type: String }, // googleId, githubId, etc.
+    // authProvider: { type: String, required: true }, // e.g. "google", "github"
+    // authProviderId: { type: String }, // googleId, githubId, etc.
 
     // Task list
     tasks: [TaskSchema],
@@ -63,6 +62,16 @@ const UserSchema = new Schema<UserDocument>(
   },
   { timestamps: true }
 );
+
+UserSchema.pre("save", async function () {
+    if (!this.isModified("password")) return;
+  
+    this.password = await bcrypt.hash(this.password, 10);
+  });
+  
+  UserSchema.methods.comparePassword = function (candidate: string) {
+    return bcrypt.compare(candidate, this.password)
+  }
 
 // Prevent model overwrite
 const User =
