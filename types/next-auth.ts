@@ -5,11 +5,11 @@ declare module "next-auth" {
   interface User {
     _id?: string;
     email?: string;
-    username?: string;
+    name?: string;
   }
   interface Session {
     user: {
-      _id?: string;
+      id?: string;
       email?: string;
       username?: string;
     } & DefaultSession["user"];

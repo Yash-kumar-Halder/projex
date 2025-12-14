@@ -1,18 +1,45 @@
+"use client"
 import Link from "next/link";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
 import { IoEyeOffSharp } from "react-icons/io5";
 import { FaRegEye } from "react-icons/fa";
+import { signIn } from "next-auth/react";
+import { Button } from "./ui/button";
+import { ImSpinner2 } from "react-icons/im";
 
 const SignUpForm = () => {
     const [isPassShow, setIsPassShow] = useState(false);
+    const [isSubmitting, setIsSubmitting] = useState(false);
 
     const showPasswordToggle = () => {
         setIsPassShow((prev) => !prev);
     };
 
+    const handleFormsubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        e.preventDefault();
+        setIsSubmitting(true);
+                
+        const formData = new FormData(e.currentTarget);
+
+        // console.log({
+        //     email: formData.get("email"),
+        //     password: formData.get("password"),
+        // })
+
+        const response = await signIn('credentials', {
+            email: formData.get("email"),
+            password: formData.get("password"),
+            redirect: false
+        })
+
+        setIsSubmitting(false);
+        console.log(response)
+
+    }
+
     return (
-        <form className="shadow-md shadow-neutral-400 p-6 w-2/9 min-h-3/5 rounded-md bg-neutral-100 ">
+        <form onSubmit={handleFormsubmit} className="shadow-md shadow-neutral-400 p-6 w-2/9 min-h-3/5 rounded-md bg-neutral-100 ">
             <h2 className="text-2xl font-bold text-center pt-3 pb-4">
                 PROJEX
             </h2>
@@ -24,14 +51,16 @@ const SignUpForm = () => {
                     <input
                         type="text"
                         id="name"
+                        name="name"
                         className="border-black border rounded py-1 px-2 "
                     />
                     <label htmlFor="email" className="font-semibold">
                         Email
                     </label>
                     <input
-                        type="text"
+                        type="email"
                         id="email"
+                        name="email"
                         className="border-black border rounded py-1 px-2 "
                     />
                     <label htmlFor="password" className="font-semibold">
@@ -41,6 +70,7 @@ const SignUpForm = () => {
                         <input
                             type={isPassShow ? "text" : "password"}
                             id="password"
+                            name="password"
                             placeholder="*******"
                             className="w-full  py-1 px-2 outline-0"
                         />
@@ -52,6 +82,9 @@ const SignUpForm = () => {
                         </div>
                     </div>
                 </div>
+                <Button disabled={isSubmitting} type="submit" >
+                    {isSubmitting ? <ImSpinner2 className="animate-spin" /> : "Sing Up"}
+                </Button>
                 <span className="text-center font-semibold select-none">OR</span>
                 <div className="mt-6">
                     <div>
