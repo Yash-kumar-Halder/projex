@@ -7,10 +7,12 @@ import { FaRegEye } from "react-icons/fa";
 import { signIn } from "next-auth/react";
 import { Button } from "./ui/button";
 import { ImSpinner2 } from "react-icons/im";
+import OTPForm from "./otp-form";
 
 const SignUpForm = () => {
     const [isPassShow, setIsPassShow] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [step, setStep] = useState("");
 
     const showPasswordToggle = () => {
         setIsPassShow((prev) => !prev);
@@ -36,6 +38,10 @@ const SignUpForm = () => {
         setIsSubmitting(false);
         console.log(response)
 
+    }
+
+    if(step === "code") {
+        return <OTPForm />
     }
 
     return (
