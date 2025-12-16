@@ -19,7 +19,7 @@ export const sendVerificationCode = async (params: SendVerificationCodeParams): 
     }
 
     await transporter.sendMail({
-        from: `Projex <${process.env.SMPT_EMAIL}>`,
+        from: `Projex <${process.env.SMTP_EMAIL}>`,
         to: email,
         subject,
         html

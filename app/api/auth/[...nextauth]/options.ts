@@ -4,6 +4,8 @@ import GoogleProvider from "next-auth/providers/google";
 import bcrypt from "bcryptjs";
 import { connectToDB } from "@/db/connectDB";
 import User from "@/models/user.model";
+import { sendVerificationCode } from "@/utils/send-verification-code";
+import { generateVerificationCode } from "@/utils/generate-verification-code";
 
 export const authOptions: NextAuthOptions = {
   providers: [
@@ -19,43 +21,31 @@ export const authOptions: NextAuthOptions = {
             },
             password: { label: "Password", type: "password" },
         },
-        async authorize(credentials: any): Promise<any> {
-            try {
-                await connectToDB();
-
-                if(!credentials.email || !credentials.password) {
-                    throw new Error("Missing credentials")
-                }
-
-            // Add your authentication logic here
-            const user = await User.findOne({
-                $or: [
-                { email: credentials.email }
-                ],
-            });
-            if (!user) {
-                throw new Error("No user found with this email");
+        async authorize(credentials) {
+            await connectToDB();
+          
+            if (!credentials?.email || !credentials?.password) {
+              throw new Error("Missing credentials");
             }
-
-            console.log("User = ", user)
-
+          
+            const user = await User.findOne({ email: credentials.email });
+            if (!user) return null; // ✅ REQUIRED by NextAuth
+          
             const isPasswordCorrect = await bcrypt.compare(
-                credentials.password,
-                user.password
+              credentials.password,
+              user.password
             );
+          
             if (!isPasswordCorrect) {
-                throw new Error("Invalid password");
-            } else {
-                return {
-                    id: user._id.toString(),
-                    name: user.name,
-                    email: user.email
-                };
+              throw new Error("Invalid password");
             }
-            } catch (error: any) {
-            throw new Error(error);
-            }
-        },
+          
+            return {
+              id: user._id.toString(),
+              name: user.name,
+              email: user.email,
+            };
+          }          
     }
     ),
     GoogleProvider(

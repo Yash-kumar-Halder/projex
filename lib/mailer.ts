@@ -7,7 +7,8 @@ export const transporter = nodemailer.createTransport(
         secure: false,
         auth: {
             user: "apikey",
-            pass: process.env.BREVO_SMTP_KEY!
+            pass: process.env.BREVO_SMTP_KEY,
         }
     }
 )
+

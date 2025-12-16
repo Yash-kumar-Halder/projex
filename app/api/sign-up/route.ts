@@ -1,6 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import { connectToDB } from "@/db/connectDB";
 import User from "@/models/user.model";
+import { generateVerificationCode } from "@/utils/generate-verification-code";
+import { sendVerificationCode } from "@/utils/send-verification-code";
+import EmailVerification from "@/models/emailVerification.model";
 
 export async function POST(request: NextRequest) {
   try {
@@ -15,14 +18,24 @@ export async function POST(request: NextRequest) {
         {status: 400}
     )
 
-    const newUser = await User.create({
-        name,
-        email,
-        password
-    })
+    const code = generateVerificationCode();
+      
+        await sendVerificationCode({
+          name,
+          email,
+          code,
+          purpose: "VERIFY_EMAIL",
+        });
+
+        const newEmailVerificationUser = await EmailVerification.create({
+            name,
+            email,
+            password,
+            code
+        })
 
     return NextResponse.json(
-      { message: "User registered successfully", success: true },
+      { message: "Varification code was send", success: true },
       { status: 201 }
     );
   } catch (error) {

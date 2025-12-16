@@ -8,6 +8,7 @@ import { signIn } from "next-auth/react";
 import { Button } from "./ui/button";
 import { ImSpinner2 } from "react-icons/im";
 import OTPForm from "./otp-form";
+import axios from "axios";
 
 const SignUpForm = () => {
     const [isPassShow, setIsPassShow] = useState(false);
@@ -19,26 +20,23 @@ const SignUpForm = () => {
     };
 
     const handleFormsubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+        // console.log(process.env)
         e.preventDefault();
         setIsSubmitting(true);
                 
         const formData = new FormData(e.currentTarget);
 
-        // console.log({
-        //     email: formData.get("email"),
-        //     password: formData.get("password"),
-        // })
-
-        const response = await signIn('credentials', {
+        const response = await axios.post("/api/sign-up", 
+        { 
+            name: formData.get("name"),
             email: formData.get("email"),
             password: formData.get("password"),
-            redirect: false
         })
-
         setIsSubmitting(false);
         console.log(response)
-
+        setStep("code");
     }
+    
 
     if(step === "code") {
         return <OTPForm />

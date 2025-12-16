@@ -6,7 +6,7 @@ import {
     InputOTPSeparator,
     InputOTPSlot,
   } from "@/components/ui/input-otp"
-import { useState } from "react"
+import { useEffect, useState } from "react"
 
 const OTPForm = () => {
 
@@ -14,6 +14,19 @@ const OTPForm = () => {
     const handleSubmit = () => {
         console.log("Submited")
     }
+
+    useEffect(() => {
+        value.trim();
+      if(value.length === 6) {
+        window.addEventListener("keydown", (e) => {
+            if(e.key === "Enter") {
+                // Api call
+                console.log("Api calling", value)
+            }
+        })
+      }
+    }, [value])
+    
 
   return (
     <div className="scale-150" >

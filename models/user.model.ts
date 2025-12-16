@@ -65,6 +65,11 @@ const UserSchema = new Schema<UserDocument>(
 
 UserSchema.pre("save", async function () {
     if (!this.isModified("password")) return;
+
+    // If password is already bcrypt-hashed, skip
+    if (this.password.startsWith("$2a$") || this.password.startsWith("$2b$")) {
+      return;
+    }
   
     this.password = await bcrypt.hash(this.password, 10);
   });
