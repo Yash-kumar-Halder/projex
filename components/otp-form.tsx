@@ -6,35 +6,45 @@ import {
     InputOTPSeparator,
     InputOTPSlot,
   } from "@/components/ui/input-otp"
+import { OTPFormProps } from "@/types/signup";
+import axios from "axios";
 import { useEffect, useState } from "react"
 
-const OTPForm = () => {
+const OTPForm = ({formData}: OTPFormProps) => {
 
-    const [value, setValue] = useState("");
-    const handleSubmit = () => {
-        console.log("Submited")
+    const [verificationCode, setVerificationCode] = useState("");
+
+    const handleSubmit = async () => {
+        const payload = {
+            ...formData,
+            purpose: "EMAIL_VERIFICATION",
+            code: verificationCode
+        }
+        const response = await axios.post("/api/verify-otp", payload);
+        console.log(response)
     }
 
     useEffect(() => {
-        value.trim();
-      if(value.length === 6) {
+        verificationCode.trim();
+      if(verificationCode.length === 6) {
         window.addEventListener("keydown", (e) => {
             if(e.key === "Enter") {
                 // Api call
-                console.log("Api calling", value)
+                handleSubmit();
             }
         })
       }
-    }, [value])
+    }, [verificationCode])
     
 
   return (
     <div className="scale-150" >
         <InputOTP 
         maxLength={6} 
-        value={value}
-        onChange={(value) => setValue(value)}
-        onSubmit={handleSubmit}
+        value={verificationCode}
+        onChange={(verificationCode) => {
+            setVerificationCode(verificationCode)
+        }}
         >
         <InputOTPGroup>
             <InputOTPSlot index={0} />

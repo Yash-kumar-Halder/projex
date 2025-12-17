@@ -18,11 +18,17 @@ export const sendVerificationCode = async (params: SendVerificationCodeParams): 
         throw new Error("Invalid send email password");
     }
 
+    // console.log(process.env.BREVO_SMTP_KEY)
+    // console.log(process.env.SMTP_EMAIL)
+    // console.log(transporter)
+
     await transporter.sendMail({
         from: `Projex <${process.env.SMTP_EMAIL}>`,
         to: email,
         subject,
         html
     })
+
+    return;
 
 }

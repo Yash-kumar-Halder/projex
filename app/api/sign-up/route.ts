@@ -6,44 +6,49 @@ import { sendVerificationCode } from "@/utils/send-verification-code";
 import EmailVerification from "@/models/emailVerification.model";
 
 export async function POST(request: NextRequest) {
-  try {
-    await connectToDB();
+//   try {
+//     await connectToDB();
 
-    const { name, email, password } = await request.json();
+//     const { name, email, password } = await request.json();
 
-    const isExistingEmail = await User.findOne({email});
+//     const isExistingEmail = await User.findOne({email});
     
-    if(isExistingEmail) return NextResponse.json(
-        {message: "User already exist with this email"},
-        {status: 400}
-    )
+//     if(isExistingEmail) return NextResponse.json(
+//         {message: "User already exist with this email"},
+//         {status: 400}
+//     )
 
-    const code = generateVerificationCode();
+//     const code = generateVerificationCode();
       
-        await sendVerificationCode({
-          name,
-          email,
-          code,
-          purpose: "VERIFY_EMAIL",
-        });
+//         await sendVerificationCode({
+//           name,
+//           email,
+//           code,
+//           purpose: "VERIFY_EMAIL",
+//         });
 
-        const newEmailVerificationUser = await EmailVerification.create({
-            name,
-            email,
-            password,
-            code
-        })
+//         const newEmailVerificationUser = await EmailVerification.create({
+//             name,
+//             email,
+//             password,
+//             code,
+//             codeExpireAt: new Date(Date.now() + 10*60*1000)
+//         })
 
-    return NextResponse.json(
-      { message: "Varification code was send", success: true },
-      { status: 201 }
-    );
-  } catch (error) {
-    console.error(error);
+//     return NextResponse.json(
+//       { message: "Varification code was send", success: true },
+//       { status: 201 }
+//     );
+//   } catch (error) {
+//     console.error(error);
 
-    return NextResponse.json(
-      { error: "Internal Server Error" },
-      { status: 500 }
-    );
-  }
+//     return NextResponse.json(
+//       { error: "Internal Server Error" },
+//       { status: 500 }
+//     );
+//   }
+    return NextResponse.json({
+        message: "Testing",
+        success: true
+    })
 }

@@ -14,6 +14,11 @@ const SignUpForm = () => {
     const [isPassShow, setIsPassShow] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
     const [step, setStep] = useState("");
+    const [formData, setFormData] = useState({
+        name: "",
+        email: "",
+        password: "",
+    })
 
     const showPasswordToggle = () => {
         setIsPassShow((prev) => !prev);
@@ -39,7 +44,7 @@ const SignUpForm = () => {
     
 
     if(step === "code") {
-        return <OTPForm />
+        return <OTPForm formData={formData} />
     }
 
     return (
@@ -56,6 +61,10 @@ const SignUpForm = () => {
                         type="text"
                         id="name"
                         name="name"
+                        value={formData.name}
+                        onChange={(e) => {
+                            setFormData((data) => ({...data, name: e.target.value}))
+                        }}
                         className="border-black border rounded py-1 px-2 "
                     />
                     <label htmlFor="email" className="font-semibold">
@@ -65,6 +74,10 @@ const SignUpForm = () => {
                         type="email"
                         id="email"
                         name="email"
+                        value={formData.email}
+                        onChange={(e) => {
+                            setFormData((data) => ({...data, email: e.target.value}))
+                        }}
                         className="border-black border rounded py-1 px-2 "
                     />
                     <label htmlFor="password" className="font-semibold">
@@ -75,6 +88,10 @@ const SignUpForm = () => {
                             type={isPassShow ? "text" : "password"}
                             id="password"
                             name="password"
+                            value={formData.password}
+                            onChange={(e) => {
+                                setFormData((data) => ({...data, password: e.target.value}))
+                            }}
                             placeholder="*******"
                             className="w-full  py-1 px-2 outline-0"
                         />

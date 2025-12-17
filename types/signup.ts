@@ -1,6 +1,9 @@
-interface signup {
+export interface signupData {
     name: string,
-    username: string,
     email: string,
     password: string
+}
+
+export interface OTPFormProps {
+    formData: signupData;
 }

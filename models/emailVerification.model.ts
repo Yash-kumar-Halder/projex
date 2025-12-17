@@ -6,6 +6,7 @@ export interface EmailVerification extends Document {
   email: string;
   password: string,
   code:string,
+  codeExpireAt: Date,
   createdAt: Date;
   updatedAt: Date
 }
@@ -16,14 +17,17 @@ const EmailVerificationSchema = new mongoose.Schema<EmailVerification>(
         email: { type: String, required: true, unique: true },
         password: {type: String, required: true},
         code: {type: String, required: true},
+        codeExpireAt: {type: Date, required: true}
     },
     {timestamps: true}
 )
 
 EmailVerificationSchema.pre("save", async function () {
     if(!this.isModified("password")) return;
+    if(!this.isModified("code")) return;
 
     this.password = await bcrypt.hash(this.password, 10);
+    this.code = await bcrypt.hash(this.code, 10);
 })
 
 // Prevent model overwrite
