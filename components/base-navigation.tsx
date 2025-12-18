@@ -16,7 +16,7 @@ const BaseNavigation = () => {
     <button className="flex items-center gap-1 font-semibold cursor-pointer hover:text-[#fd6500] " ><LogIn size={16} />
         <Link href={"/sign-in"} >Login</Link>
     </button>
-    <Button className="shadow-xl h-fit py-1.5 cursor-pointer" >Signup</Button>
+   <Link href={"/sign-up"} ><Button className="shadow-xl h-fit py-1.5 cursor-pointer" >Signup</Button></Link>
     </div>
     </div>;
 };

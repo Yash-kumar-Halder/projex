@@ -1,5 +1,8 @@
 import { connectToDB } from "@/db/connectDB";
+import EmailVerificationModel from "@/models/emailVerification.model";
 import EmailVerification from "@/models/emailVerification.model";
+import User from "@/models/user.model";
+import bcrypt from "bcryptjs";
 import { NextRequest, NextResponse } from "next/server";
 
 
@@ -16,14 +19,30 @@ export async function POST(request: NextRequest) {
             })
         } 
 
-        const isEmailFound = await EmailVerification.findOne({email});
-        if(!isEmailFound) return NextResponse.json({
+        const emailVerificationModel = await EmailVerification.findOne({email});
+        if(!emailVerificationModel) return NextResponse.json({
             message: "Email not found for the verification",
             success: false
         })
+
+        const isVerificationCodeMatch = bcrypt.compare(code, emailVerificationModel.password);
+        if(!isVerificationCodeMatch) return NextResponse.json({
+            message: "Verification code was wrong",
+            success: false
+        })
+
+        await User.create({
+            name: emailVerificationModel.name,
+            email: emailVerificationModel.email,
+            password: emailVerificationModel.password,
+            authProvider: "credentials"
+        })
+
+        await EmailVerificationModel.findOneAndDelete({email});
+
         
         return NextResponse.json({
-            message: "Yahhh",
+            message: "Registered successfully",
             success: true
         })
 

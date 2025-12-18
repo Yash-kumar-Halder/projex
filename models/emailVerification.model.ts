@@ -6,7 +6,7 @@ export interface EmailVerification extends Document {
   email: string;
   password: string,
   code:string,
-  codeExpireAt: Date,
+  verificationCodeExpireAt: Date,
   createdAt: Date;
   updatedAt: Date
 }
@@ -17,7 +17,7 @@ const EmailVerificationSchema = new mongoose.Schema<EmailVerification>(
         email: { type: String, required: true, unique: true },
         password: {type: String, required: true},
         code: {type: String, required: true},
-        codeExpireAt: {type: Date, required: true}
+        verificationCodeExpireAt: {type: Date, required: true}
     },
     {timestamps: true}
 )
@@ -31,8 +31,8 @@ EmailVerificationSchema.pre("save", async function () {
 })
 
 // Prevent model overwrite
-const EmailVerification =
+const EmailVerificationModel =
   (mongoose.models.EmailVerification as mongoose.Model<EmailVerification>) ||
   mongoose.model<EmailVerification>("EmailVerification", EmailVerificationSchema);
 
-export default EmailVerification;
+export default EmailVerificationModel;
