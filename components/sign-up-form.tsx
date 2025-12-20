@@ -1,4 +1,4 @@
-"use client"
+"use client";
 import Link from "next/link";
 import { useState } from "react";
 import { FcGoogle } from "react-icons/fc";
@@ -13,45 +13,54 @@ import axios from "axios";
 const SignUpForm = () => {
     const [isPassShow, setIsPassShow] = useState(false);
     const [isSubmitting, setIsSubmitting] = useState(false);
+    const [errorResponse, setErrorResponse] = useState({
+        email: "",
+        message: "",
+    });
     const [step, setStep] = useState("");
     const [formData, setFormData] = useState({
         name: "",
         email: "",
         password: "",
-    })
+    });
 
     const showPasswordToggle = () => {
         setIsPassShow((prev) => !prev);
     };
 
     const handleFormsubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-        // console.log(process.env)
         e.preventDefault();
         setIsSubmitting(true);
-                
-        const formData = new FormData(e.currentTarget);
 
-        const response = await axios.post("/api/sign-up", 
-        { 
-            name: formData.get("name"),
-            email: formData.get("email"),
-            password: formData.get("password"),
-        })
-        setIsSubmitting(false);
-        console.log(response)
-        setStep("code");
-    }
-    
+        try {
+            const formData = new FormData(e.currentTarget);
 
-    if(step === "code") {
-        return <OTPForm formData={formData} />
+            const response = await axios.post("/api/sign-up", {
+                name: formData.get("name"),
+                email: formData.get("email"),
+                password: formData.get("password"),
+            });
+
+            setStep("code");
+        } catch (error: any) {
+            if (error.response?.data?.error === "EMAIL") {
+                errorResponse.email = error.response.data.message;
+            }
+        } finally {
+            setIsSubmitting(false);
+        }
+    };
+
+    if (step === "code") {
+        return <OTPForm formData={formData} />;
     }
 
     return (
-        <form onSubmit={handleFormsubmit} className="shadow-md shadow-neutral-400 p-6 w-2/9 min-h-3/5 rounded-md bg-neutral-100 ">
-            <h2 className="text-2xl font-bold text-center pt-3 pb-4">
-                PROJEX
-            </h2>
+        <form
+            onSubmit={handleFormsubmit}
+            className="shadow-md shadow-neutral-400 p-6 w-2/9 min-h-3/5 rounded-md bg-neutral-100 "
+        >
+            <h2 className="text-2xl font-bold text-center pt-3 pb-4">PROJEX</h2>
             <div className="flex flex-col">
                 <div className="py-6 border-t border-dashed border-t-black flex flex-col gap-2">
                     <label htmlFor="name" className="font-semibold">
@@ -63,7 +72,10 @@ const SignUpForm = () => {
                         name="name"
                         value={formData.name}
                         onChange={(e) => {
-                            setFormData((data) => ({...data, name: e.target.value}))
+                            setFormData((data) => ({
+                                ...data,
+                                name: e.target.value,
+                            }));
                         }}
                         className="border-black border rounded py-1 px-2 "
                     />
@@ -76,10 +88,14 @@ const SignUpForm = () => {
                         name="email"
                         value={formData.email}
                         onChange={(e) => {
-                            setFormData((data) => ({...data, email: e.target.value}))
+                            setFormData((data) => ({
+                                ...data,
+                                email: e.target.value,
+                            }));
                         }}
-                        className="border-black border rounded py-1 px-2 "
+                        className="border-black border rounded py-1 px-2"
                     />
+                    <span className="text-red-500 font-semibold" >{"! " + errorResponse.email || ""}</span>
                     <label htmlFor="password" className="font-semibold">
                         Password
                     </label>
@@ -90,7 +106,10 @@ const SignUpForm = () => {
                             name="password"
                             value={formData.password}
                             onChange={(e) => {
-                                setFormData((data) => ({...data, password: e.target.value}))
+                                setFormData((data) => ({
+                                    ...data,
+                                    password: e.target.value,
+                                }));
                             }}
                             placeholder="*******"
                             className="w-full  py-1 px-2 outline-0"
@@ -103,10 +122,16 @@ const SignUpForm = () => {
                         </div>
                     </div>
                 </div>
-                <Button disabled={isSubmitting} type="submit" >
-                    {isSubmitting ? <ImSpinner2 className="animate-spin" /> : "Sing Up"}
+                <Button disabled={isSubmitting} type="submit">
+                    {isSubmitting ? (
+                        <ImSpinner2 className="animate-spin" />
+                    ) : (
+                        "Sing Up"
+                    )}
                 </Button>
-                <span className="text-center font-semibold select-none">OR</span>
+                <span className="text-center font-semibold select-none">
+                    OR
+                </span>
                 <div className="mt-6">
                     <div>
                         <div className="flex gap-2 items-center shadow shadow-neutral-400 py-2 justify-center rounded cursor-pointer bg-blue-100 hover:bg-blue-200 transition-colors duration-150 ">
